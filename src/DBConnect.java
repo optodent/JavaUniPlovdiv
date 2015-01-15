@@ -3,6 +3,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 
 public class DBConnect {
@@ -22,8 +23,68 @@ public class DBConnect {
 		}
 	}// end DBConnect
 	
+	// method to get all the specialities from the DB in the form of a string array
+	public String[] getAllSpec(){
+		try{
+			// creating an arraylist to store the string results
+			ArrayList<String> specList = new ArrayList<String>();
+			
+			// query to the db to get all the entries
+			String query = "SELECT * from specialnosti";					       
+		    
+			rs = st.executeQuery(query);
+			
+			// iterating trough the db
+			while (rs.next()){		   		        
+		        String specName = rs.getString("sname");
+		        specList.add(specName);		        
+		    }
+			
+			// making a normal String array with the size of the ArrayList and putting the entries inside of it
+			String[] specArr = new String[specList.size()];
+			specArr = specList.toArray(specArr); 
+			
+			return specArr;	
+			
+		}catch(Exception ex){
+			System.out.println(ex);
+		}
+		return null;
+	}
+	
+	// method for adding new specialnosti to the db
+	public void addSpec(String spec){
+		try{					
+			String query =  " insert into specialnosti (sname)"
+			        + " values (?)";
+			PreparedStatement pst = con.prepareStatement(query);	
+			pst.setString(1, spec);			
+			
+			pst.execute();
+					
+		}catch(Exception ex){
+			System.out.println(ex);
+		}
+	}// end addSpec
+	
+	// method to add people to the database (try using a dropdown menu with specialnostite (in another method or this one??)
+	public void addPerson(String fName, String lName, String fakNum){
 		
-	// metod za dobavqne na kniga koito priema String ime na knigata i koli4estvo na knigata
+		try{					
+			String query =  " insert into person (fname, lname, faknum)"
+			        + " values (?, ?, ?)";
+			PreparedStatement pst = con.prepareStatement(query);	
+			pst.setString(1, fName);
+			pst.setString(2, lName);
+			pst.setString(3, fakNum);
+			pst.execute();
+					
+		}catch(Exception ex){
+			System.out.println(ex);
+		}
+	}// end addPerson
+		
+	// method to add books into the db
 	public void addBook(String ime, int qty) {
 		
 		try{					
@@ -40,7 +101,7 @@ public class DBConnect {
 		}
 	}// end addBook
 	
-	// metod za suzdavane na tablicite
+	// method for table creation (used only in development for easyer work)
 	public void setTables() {
 		try{
 			String query3 = "CREATE TABLE inforeg" +
@@ -85,7 +146,7 @@ public class DBConnect {
 		
 	}// end setTables
 	
-	// metod za 4etene na informaciq
+	// method that returns data from the db
 	public void getData() {
 		try{
 			
