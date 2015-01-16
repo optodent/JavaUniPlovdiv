@@ -4,9 +4,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class DBConnect {
+	
 	private Connection con;
 	private Statement st;
 	private ResultSet rs;
@@ -16,7 +19,6 @@ public class DBConnect {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection("jdbc:mysql://78.130.208.36/tutorials", "admin4o", "56745674");
 			st = con.createStatement();
-			System.out.println(123);
 			
 			
 		}catch(Exception exe){
@@ -101,6 +103,25 @@ public class DBConnect {
 			System.out.println(ex);
 		}
 	}// end addBook
+	
+	public Object[][] getBooks(){
+		
+		ArrayList<Object[]> books = new ArrayList<Object[]>();
+		try{
+			String query = "select * from knigi";
+			Statement statm = con.createStatement();
+			ResultSet result = statm.executeQuery(query);
+			while(result.next()){
+				
+				Object[] book = {result.getObject("id"), result.getObject("kname"), result.getObject("author"), result.getObject("qty")};
+				books.add(book);
+			}
+			
+		}catch(Exception ex){
+			System.out.println("Error" + ex);
+		}
+		return books.toArray(new Object[0][0]);
+	}
 	
 	// method for table creation (used only in development for easyer work)
 	public void setTables() {

@@ -12,6 +12,7 @@ public class Main extends JFrame {
 		
 		super();
 		this.setSize(500, 500);
+		this.setResizable(false);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
