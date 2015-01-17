@@ -71,15 +71,17 @@ public class DBConnect {
 	}// end addSpec
 	
 	// method to add people to the database (try using a dropdown menu with specialnostite (in another method or this one??)
-	public void addPerson(String fName, String lName, String fakNum){
+	public void addPerson(String fName, String lName, String fakNum, int spec){
+		
 		
 		try{					
-			String query =  " insert into person (fname, lname, faknum)"
-			        + " values (?, ?, ?)";
+			String query =  " insert into person (fname, lname, faknum, specialnost)"
+			        + " values (?, ?, ?, ?)";
 			PreparedStatement pst = con.prepareStatement(query);	
 			pst.setString(1, fName);
 			pst.setString(2, lName);
 			pst.setString(3, fakNum);
+			pst.setInt(4, spec);
 			pst.execute();
 					
 		}catch(Exception ex){
