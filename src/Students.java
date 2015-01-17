@@ -27,6 +27,7 @@ public class Students extends JPanel{
 	private JScrollPane scrollPane;
 	private JTable table;
 	private String fNameT,lNameT,fakNumT, spec;
+	private boolean clicked = false; 
 	
 	//not done yet
 	private JButton addPplBtn;
@@ -143,10 +144,6 @@ public class Students extends JPanel{
 		
 		this.add(addPplBtn);
 		
-		// show/hide table button
-		JButton showHideBtn = new JButton("Show Table");
-		showHideBtn.setBounds(10, 211, 120, 23);
-		this.add(showHideBtn);
 		
 		// refresh table button
 		JButton refreshBtn = new JButton("Refresh");
@@ -161,9 +158,11 @@ public class Students extends JPanel{
 		//adding a scrollpane with a table inside of it, containing the students data and books taken
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 245, 464, 206);
+		scrollPane.setVisible(false);
 		this.add(scrollPane);
 		
 		table = new JTable();
+		table.setVisible(false);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, "", null, null, null},
@@ -195,7 +194,38 @@ public class Students extends JPanel{
 		table.getColumnModel().getColumn(3).setPreferredWidth(125);
 		scrollPane.setViewportView(table);
 		
-		
+		// show/hide table button
+		JButton showHideBtn = new JButton("Show Table");
+		showHideBtn.setBounds(10, 211, 120, 23);
+		showHideBtn.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				
+				if (clicked)  
+		         {  										
+					scrollPane.setVisible(false);
+					table.setVisible(false);
+					showHideBtn.setText("Show Table");
+					clicked = false; 
+		         }  
+		         else  
+		         {  
+		        	 scrollPane.setVisible(true);
+		        	 table.setVisible(true);
+		        	 showHideBtn.setText("Hide Table");
+		        	 clicked = true; 
+		         }  
+		         
+				
+				
+
+
+				
+								
+			}
+		});
+
+		this.add(showHideBtn);
 		
 		
 		
