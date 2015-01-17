@@ -104,6 +104,8 @@ public class DBConnect {
 		}
 	}// end addBook
 	
+	
+	//return all books as a array
 	public Object[][] getBooks(){
 		
 		ArrayList<Object[]> books = new ArrayList<Object[]>();
