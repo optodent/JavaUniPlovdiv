@@ -70,25 +70,73 @@ public class DBConnect {
 		}
 	}// end addSpec
 	
+	//****************
+	//*PERSON METHODS*
+	//****************
+	
 	// method to add people to the database (try using a dropdown menu with specialnostite (in another method or this one??)
 	public void addPerson(String fName, String lName, String fakNum, int spec){
 		
-		
+				
 		try{					
-			String query =  " insert into person (fname, lname, faknum, specialnost)"
+			String query =  " insert into person (fname, lname, faknum, spec_fk)"
 			        + " values (?, ?, ?, ?)";
-			PreparedStatement pst = con.prepareStatement(query);	
+			PreparedStatement pst = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);	
 			pst.setString(1, fName);
 			pst.setString(2, lName);
 			pst.setString(3, fakNum);
 			pst.setInt(4, spec);
+			
 			pst.execute();
+			
 					
 		}catch(Exception ex){
 			System.out.println(ex);
 		}
 	}// end addPerson
-		
+	
+	//tries to get string data from a few tables and returns an ArrayList of Object[] to populate the Students table with.
+	public ArrayList<Object[]> getAllPeopleData(){
+		String specName = "test";
+		ArrayList<Object[]> people = new ArrayList<Object[]>();
+		try{
+			String queryPeople = "select * from person";
+			Statement stPeople = con.createStatement();
+			ResultSet rsPeople = stPeople.executeQuery(queryPeople);			
+												
+			while(rsPeople.next()){
+				
+				String fullName = (String) rsPeople.getObject("fname") + " " + rsPeople.getObject("lname");
+				int spec = (Integer) rsPeople.getObject("spec_fk");
+				String specStr = Integer.toString(spec);
+				
+				// next few lines get the speciality associated with the primary key we get from the foreign key entered in the person table
+				String querySpec = "SELECT * FROM specialnosti WHERE spec_id=" + specStr;
+				Statement stSpec = con.createStatement();
+				ResultSet rsSpec = stSpec.executeQuery(querySpec);
+				
+				while(rsSpec.next()){
+					specName = (String) rsSpec.getObject("sname");
+				}
+				
+				Object[] person = {fullName , rsPeople.getObject("faknum"),						  
+							specName,
+						   "", ""};
+				
+				people.add(person);
+			}
+			
+		}catch(Exception ex){
+			System.out.println("Error" + ex);
+		}
+		return people;
+	}
+	
+	
+	// *********************
+	// *End PERSON METHODS*
+	// *********************
+	
 	// method to add books into the db
 	public void addBook(String ime, int qty) {
 		
@@ -144,15 +192,14 @@ public class DBConnect {
 	                   "(id INTEGER not NULL AUTO_INCREMENT, " +
 	                   " fname VARCHAR(20) NOT NULL, " + 
 	                   " lname VARCHAR(20) NOT NULL, " +
-	                   " faknum VARCHAR(10) NOT NULL, " +
-	                   " specialnost INT, " +
-	                   " FOREIGN KEY ( specialnost ) REFERENCES specialnosti(id), " +	                
+	                   " faknum VARCHAR(10) NOT NULL, " +	                                                    
 	                   " PRIMARY KEY ( id ))";
 			
-			String query = "CREATE TABLE specialnosti" +
-	                   "(id INTEGER not NULL AUTO_INCREMENT, " +
-	                   " sname VARCHAR(20) NOT NULL, " + 	                   
-	                   " PRIMARY KEY ( id ))";
+			String query = "CREATE TABLE specialnosti" +	                 
+	                   " (sname VARCHAR(20) NOT NULL, " + 
+	                   " spec_fk INT, " +
+	                   " FOREIGN KEY ( spec_fk ) REFERENCES person(id))";
+	                    
 			
 			String query2 = "CREATE TABLE knigi" +
 	                   "(id INTEGER not NULL AUTO_INCREMENT, " +

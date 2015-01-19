@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,12 +22,14 @@ import javax.swing.table.DefaultTableModel;
 public class Students extends JPanel{
 	
 	DBConnect con;
+	private JComboBox<String> dropDown;
 	private JTextField fName;
 	private JTextField lName;
 	private JTextField fakNum;
 	private JScrollPane scrollPane;
 	private JTable table;
-	private String fNameT,lNameT,fakNumT, spec;
+	private String fNameT,lNameT,fakNumT;
+	private int spec;
 	private boolean clicked = false; 
 	
 	//not done yet
@@ -43,8 +46,8 @@ public class Students extends JPanel{
 		this.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		//dropdown menu
-		JComboBox<String> dropDown = new JComboBox<String>(con.getAllSpec());
-		dropDown.setBounds(30, 129, 100, 20);
+		dropDown = new JComboBox<String>(con.getAllSpec());
+		dropDown.setBounds(66, 130, 100, 20);
 		dropDown.setVisible(true);
 				
 		
@@ -53,7 +56,7 @@ public class Students extends JPanel{
 		
 		//first name text field
 		JTextField fName = new JTextField();
-		fName.setBounds(30, 36, 100, 20);
+		fName.setBounds(66, 36, 100, 20);
 		fName.setColumns(10);
 		fName.setVisible(true);
 		
@@ -61,6 +64,7 @@ public class Students extends JPanel{
 		//when focus is changed away from this field
 		fName.addFocusListener(new FocusListener() {
 		      public void focusGained(FocusEvent e) {
+		    	 
 		      };
 		      public void focusLost(FocusEvent e) {
 		        if (!e.isTemporary()) {
@@ -77,7 +81,7 @@ public class Students extends JPanel{
 		
 		//last name text field
 		JTextField lName = new JTextField();
-		lName.setBounds(30, 67, 100, 20);
+		lName.setBounds(66, 67, 100, 20);
 		lName.setColumns(10);
 		lName.setVisible(true);	
 		
@@ -102,7 +106,7 @@ public class Students extends JPanel{
 		
 		//fakulteten nomer text field
 		JTextField fakNum = new JTextField();
-		fakNum.setBounds(30, 98, 100, 20);
+		fakNum.setBounds(66, 98, 100, 20);
 		fakNum.setColumns(10);
 		fakNum.setVisible(true);		
 		
@@ -127,14 +131,13 @@ public class Students extends JPanel{
 		//add student button
 		addPplBtn = new JButton("Add Student");
 		addPplBtn.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		addPplBtn.setBounds(138, 97, 89, 52);
+		addPplBtn.setBounds(176, 98, 89, 52);
 		addPplBtn.addActionListener(new ActionListener()
 	    {
 	      public void actionPerformed(ActionEvent e)
 	      {		
-	    	  
-	    	  
-	    	  int spec = dropDown.getSelectedIndex() + 1;
+	    	      	  
+	    	  spec = dropDown.getSelectedIndex() + 1;
 	    	  con.addPerson(fNameT, lNameT, fakNumT, spec);
 	    	  fName.setText("");
 	    	  lName.setText("");
@@ -145,15 +148,34 @@ public class Students extends JPanel{
 		this.add(addPplBtn);
 		
 		
-		// refresh table button
-		JButton refreshBtn = new JButton("Refresh");
-		refreshBtn.setBounds(385, 211, 89, 23);
-		this.add(refreshBtn);
+		
 		
 		//text at top left
 		JLabel lblNewLabel = new JLabel("Students");
 		lblNewLabel.setBounds(10, 11, 93, 14);
+	
 		this.add(lblNewLabel);
+		// more text/labels
+		JLabel lblNewLabel_1 = new JLabel("F. Name");
+		lblNewLabel_1.setBounds(10, 39, 46, 14);
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		this.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("L. Name");
+		lblNewLabel_2.setBounds(10, 70, 46, 14);
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		this.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("Fak. Num");
+		lblNewLabel_3.setBounds(10, 101, 46, 14);
+		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		this.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Speciality");
+		lblNewLabel_4.setBounds(10, 132, 46, 14);
+		lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		this.add(lblNewLabel_4);
+		
 		
 		//adding a scrollpane with a table inside of it, containing the students data and books taken
 		scrollPane = new JScrollPane();
@@ -165,31 +187,62 @@ public class Students extends JPanel{
 		table.setVisible(false);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, "", null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
+				
 			},
 			new String[] {
 				"Student", "Fak. Number", "Speciality", "Drp down menu of books taken", "Taken date", "Return date"
 			}
 		));
+		// stff
+		
+		
+		// -- next 4 lines of code populate the table with the necessary data
+		DefaultTableModel model=(DefaultTableModel) table.getModel();
+    	for(Object[] person : con.getAllPeopleData()){
+    		model.addRow(person);
+    	}
+    	// --
+    	
+    	// ********************
+    	// REFRESH table button
+    	// ********************
+    	JButton refreshBtn = new JButton("Refresh");
+    	refreshBtn.setBounds(385, 211, 89, 23);
+
+
+    	// action listener for the refresh button
+    	refreshBtn.addActionListener(new ActionListener()
+    	{
+    		public void actionPerformed(ActionEvent e)
+    		{		
+    			//refreshing the table data
+    			int rowCount = model.getRowCount();
+    			//Remove rows one by one from the end of the table
+    			for (int i = rowCount - 1; i >= 0; i--) {
+    			    model.removeRow(i);   			
+    			}
+    			//Repopulates the table with the updated data
+    			    			for(Object[] person : con.getAllPeopleData()){
+    	    		model.addRow(person);
+    	    	}
+    			
+    			//refreshing the dropdown menu data    			
+    			String[] specList = con.getAllSpec();
+    			dropDown.removeAllItems();
+    			
+    			for (int i = 0; i < specList.length; i++) {
+    	            String temp = specList[i];
+    	            dropDown.addItem(temp);
+    	        }
+    			
+    		}	   
+    	});
+		
+		this.add(refreshBtn);
+		// ************************
+    	// end REFRESH table button
+    	// ************************
+	
 		table.getColumnModel().getColumn(0).setPreferredWidth(129);
 		table.getColumnModel().getColumn(3).setPreferredWidth(125);
 		scrollPane.setViewportView(table);
