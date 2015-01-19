@@ -47,7 +47,7 @@ public class Students extends JPanel{
 		
 		//dropdown menu
 		dropDown = new JComboBox<String>(con.getAllSpec());
-		dropDown.setBounds(30, 129, 100, 20);
+		dropDown.setBounds(66, 130, 100, 20);
 		dropDown.setVisible(true);
 				
 		
@@ -56,7 +56,7 @@ public class Students extends JPanel{
 		
 		//first name text field
 		JTextField fName = new JTextField();
-		fName.setBounds(30, 36, 100, 20);
+		fName.setBounds(66, 36, 100, 20);
 		fName.setColumns(10);
 		fName.setVisible(true);
 		
@@ -64,6 +64,7 @@ public class Students extends JPanel{
 		//when focus is changed away from this field
 		fName.addFocusListener(new FocusListener() {
 		      public void focusGained(FocusEvent e) {
+		    	 
 		      };
 		      public void focusLost(FocusEvent e) {
 		        if (!e.isTemporary()) {
@@ -80,7 +81,7 @@ public class Students extends JPanel{
 		
 		//last name text field
 		JTextField lName = new JTextField();
-		lName.setBounds(30, 67, 100, 20);
+		lName.setBounds(66, 67, 100, 20);
 		lName.setColumns(10);
 		lName.setVisible(true);	
 		
@@ -105,7 +106,7 @@ public class Students extends JPanel{
 		
 		//fakulteten nomer text field
 		JTextField fakNum = new JTextField();
-		fakNum.setBounds(30, 98, 100, 20);
+		fakNum.setBounds(66, 98, 100, 20);
 		fakNum.setColumns(10);
 		fakNum.setVisible(true);		
 		
@@ -130,7 +131,7 @@ public class Students extends JPanel{
 		//add student button
 		addPplBtn = new JButton("Add Student");
 		addPplBtn.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		addPplBtn.setBounds(138, 97, 89, 52);
+		addPplBtn.setBounds(176, 98, 89, 52);
 		addPplBtn.addActionListener(new ActionListener()
 	    {
 	      public void actionPerformed(ActionEvent e)
@@ -152,7 +153,29 @@ public class Students extends JPanel{
 		//text at top left
 		JLabel lblNewLabel = new JLabel("Students");
 		lblNewLabel.setBounds(10, 11, 93, 14);
+	
 		this.add(lblNewLabel);
+		// more text/labels
+		JLabel lblNewLabel_1 = new JLabel("F. Name");
+		lblNewLabel_1.setBounds(10, 39, 46, 14);
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		this.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("L. Name");
+		lblNewLabel_2.setBounds(10, 70, 46, 14);
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		this.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("Fak. Num");
+		lblNewLabel_3.setBounds(10, 101, 46, 14);
+		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		this.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Speciality");
+		lblNewLabel_4.setBounds(10, 132, 46, 14);
+		lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		this.add(lblNewLabel_4);
+		
 		
 		//adding a scrollpane with a table inside of it, containing the students data and books taken
 		scrollPane = new JScrollPane();
