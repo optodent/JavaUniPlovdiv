@@ -26,7 +26,8 @@ public class Students extends JPanel{
 	private JTextField fakNum;
 	private JScrollPane scrollPane;
 	private JTable table;
-	private String fNameT,lNameT,fakNumT, spec;
+	private String fNameT,lNameT,fakNumT;
+	private int spec;
 	private boolean clicked = false; 
 	
 	//not done yet
@@ -132,9 +133,8 @@ public class Students extends JPanel{
 	    {
 	      public void actionPerformed(ActionEvent e)
 	      {		
-	    	  
-	    	  
-	    	  int spec = dropDown.getSelectedIndex() + 1;
+	    	      	  
+	    	  spec = dropDown.getSelectedIndex() + 1;
 	    	  con.addPerson(fNameT, lNameT, fakNumT, spec);
 	    	  fName.setText("");
 	    	  lName.setText("");
@@ -145,10 +145,7 @@ public class Students extends JPanel{
 		this.add(addPplBtn);
 		
 		
-		// refresh table button
-		JButton refreshBtn = new JButton("Refresh");
-		refreshBtn.setBounds(385, 211, 89, 23);
-		this.add(refreshBtn);
+		
 		
 		//text at top left
 		JLabel lblNewLabel = new JLabel("Students");
@@ -165,31 +162,38 @@ public class Students extends JPanel{
 		table.setVisible(false);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, "", null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
+				
 			},
 			new String[] {
 				"Student", "Fak. Number", "Speciality", "Drp down menu of books taken", "Taken date", "Return date"
 			}
 		));
+		// stff
+		// refresh table button
+		JButton refreshBtn = new JButton("Refresh");
+		refreshBtn.setBounds(385, 211, 89, 23);
+		
+		
+		// action listener for the refresh button with nothing in it yet
+		refreshBtn.addActionListener(new ActionListener()
+	    {
+	      public void actionPerformed(ActionEvent e)
+	      {		
+	    	 
+	    	
+	      }	   
+	    });
+		
+		// -- next 4 lines of code populate the table with the necessary data
+		DefaultTableModel model=(DefaultTableModel) table.getModel();
+    	for(Object[] person : con.getAllPeopleData()){
+    		model.addRow(person);
+    	}
+    	// --
+		
+		
+		this.add(refreshBtn);
+		// end sttff
 		table.getColumnModel().getColumn(0).setPreferredWidth(129);
 		table.getColumnModel().getColumn(3).setPreferredWidth(125);
 		scrollPane.setViewportView(table);
