@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,6 +22,7 @@ import javax.swing.table.DefaultTableModel;
 public class Students extends JPanel{
 	
 	DBConnect con;
+	private JComboBox<String> dropDown;
 	private JTextField fName;
 	private JTextField lName;
 	private JTextField fakNum;
@@ -44,7 +46,7 @@ public class Students extends JPanel{
 		this.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		//dropdown menu
-		JComboBox<String> dropDown = new JComboBox<String>(con.getAllSpec());
+		dropDown = new JComboBox<String>(con.getAllSpec());
 		dropDown.setBounds(30, 129, 100, 20);
 		dropDown.setVisible(true);
 				
@@ -169,20 +171,7 @@ public class Students extends JPanel{
 			}
 		));
 		// stff
-		// refresh table button
-		JButton refreshBtn = new JButton("Refresh");
-		refreshBtn.setBounds(385, 211, 89, 23);
 		
-		
-		// action listener for the refresh button with nothing in it yet
-		refreshBtn.addActionListener(new ActionListener()
-	    {
-	      public void actionPerformed(ActionEvent e)
-	      {		
-	    	 
-	    	
-	      }	   
-	    });
 		
 		// -- next 4 lines of code populate the table with the necessary data
 		DefaultTableModel model=(DefaultTableModel) table.getModel();
@@ -190,10 +179,47 @@ public class Students extends JPanel{
     		model.addRow(person);
     	}
     	// --
-		
+    	
+    	// ********************
+    	// REFRESH table button
+    	// ********************
+    	JButton refreshBtn = new JButton("Refresh");
+    	refreshBtn.setBounds(385, 211, 89, 23);
+
+
+    	// action listener for the refresh button
+    	refreshBtn.addActionListener(new ActionListener()
+    	{
+    		public void actionPerformed(ActionEvent e)
+    		{		
+    			//refreshing the table data
+    			int rowCount = model.getRowCount();
+    			//Remove rows one by one from the end of the table
+    			for (int i = rowCount - 1; i >= 0; i--) {
+    			    model.removeRow(i);   			
+    			}
+    			//Repopulates the table with the updated data
+    			    			for(Object[] person : con.getAllPeopleData()){
+    	    		model.addRow(person);
+    	    	}
+    			
+    			//refreshing the dropdown menu data    			
+    			String[] specList = con.getAllSpec();
+    			dropDown.removeAllItems();
+    			
+    			for (int i = 0; i < specList.length; i++) {
+    	            String temp = specList[i];
+    	            dropDown.addItem(temp);
+    	        }
+    			
+    		}	   
+    	});
 		
 		this.add(refreshBtn);
-		// end sttff
+		// ************************
+    	// end REFRESH table button
+    	// ************************
+	
 		table.getColumnModel().getColumn(0).setPreferredWidth(129);
 		table.getColumnModel().getColumn(3).setPreferredWidth(125);
 		scrollPane.setViewportView(table);
