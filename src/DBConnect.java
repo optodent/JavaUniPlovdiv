@@ -4,13 +4,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 public class DBConnect {
 	
-	private Connection con;
+	public static Connection con;
 	private Statement st;
 	private ResultSet rs;
 	
@@ -175,7 +173,7 @@ public class DBConnect {
 		return books.toArray(new Object[0][0]);
 	}
 	
-	// method for table creation (used only in development for easyer work)
+	// method for table creation (used only in development for easier work)
 	public void setTables() {
 		try{
 			String query3 = "CREATE TABLE inforeg" +
