@@ -22,9 +22,10 @@ public class Main extends JFrame {
 		Students students = new Students(connect);
 		Books books = new Books(connect);
 		Specialities specialities = new Specialities(connect);
-			
+		MainStuff mainstuff = new MainStuff(connect);	
 		
 		JTabbedPane tabs = new JTabbedPane();
+		tabs.addTab("MainStuff", mainstuff);
 		tabs.addTab("Students", students);
 		tabs.addTab("Books", books);
 		tabs.addTab("Specialities", specialities);

@@ -55,6 +55,161 @@ public class DBConnect {
 		return null;
 	}
 	
+	// get all fak nums
+	public String[] getAllFakNums(){
+		try{
+			// creating an arraylist to store the string results
+			ArrayList<String> fakList = new ArrayList<String>();
+			
+			// query to the db to get all the entries
+			String query = "SELECT faknum from person";					       
+		    
+			rs = st.executeQuery(query);
+			
+			// iterating trough the db
+			while (rs.next()){		   		        
+		        String fakNum = rs.getString("faknum");
+		        fakList.add(fakNum);		        
+		    }
+			
+			// making a normal String array with the size of the ArrayList and putting the entries inside of it
+			String[] fakArr = new String[fakList.size()];
+			fakArr = fakList.toArray(fakArr); 
+			
+			return fakArr;	
+			
+		}catch(Exception ex){
+			System.out.println(ex);
+		}
+		return null;
+	}
+	// get books taken information for specific student
+	public String getPersonBooks(String fn){
+		try{
+
+			String allData = null;
+			
+			// query to the db to get all the entries
+			String query = "SELECT k.kname, i.vzeta, i.za_vrushtane"
+						+ " from knigi k"
+						+ " join inforeg i"
+						+ " on k.id = i.kniga_fk"
+						+ " join person p"
+						+ " on p.id = i.person_fk"
+						+ " where p.faknum = " + fn;	
+								
+										       
+		    
+			rs = st.executeQuery(query);
+			
+			while (rs.next()){		   		        
+				String one = rs.getString("fname");
+			    String two = rs.getString("lname");
+				String three = rs.getString("faknum");
+		        String four = rs.getString("sname");
+		        
+		        allData = "<html>" +one + " " +two+ "<br>" +three+ "<br>" + four + "</html>";		        
+		    }
+			
+			
+									
+			return allData;	
+			
+		}catch(Exception ex){
+			System.out.println(ex);
+		}
+		return null;
+		
+	}
+	// get specific person information based on FakNum string
+	public String getPersonByFn(String fn){
+		try{
+
+			String allData = null;
+			
+			// query to the db to get all the entries
+			String query = "SELECT p.fname, p.lname, p.faknum, s.sname"
+						+ " from person p"
+						+ " join specialnosti s"
+						+ " on p.spec_fk = s.spec_id"
+						+ " where p.faknum = " + fn;					       
+		    
+			rs = st.executeQuery(query);
+			
+			while (rs.next()){		   		        
+				String one = rs.getString("fname");
+			    String two = rs.getString("lname");
+				String three = rs.getString("faknum");
+		        String four = rs.getString("sname");
+		        
+		        allData = "<html>" +one + " " +two+ "<br>" +three+ "<br>" + four + "</html>";		        
+		    }
+			
+			
+									
+			return allData;	
+			
+		}catch(Exception ex){
+			System.out.println(ex);
+		}
+		return null;
+		
+	}
+	
+	
+	// get all book names
+	public String[] getAllBookNames(){
+		try{
+			// creating an arraylist to store the string results
+			ArrayList<String> bookList = new ArrayList<String>();
+			
+			// query to the db to get all the entries
+			String query = "SELECT kname from knigi";					       
+		    
+			rs = st.executeQuery(query);
+			
+			// iterating trough the db
+			while (rs.next()){		   		        
+		        String book = rs.getString("kname");
+		        bookList.add(book);		        
+		    }
+			
+			// making a normal String array with the size of the ArrayList and putting the entries inside of it
+			String[] bookArr = new String[bookList.size()];
+			bookArr = bookList.toArray(bookArr); 
+			
+			return bookArr;	
+			
+		}catch(Exception ex){
+			System.out.println(ex);
+		}
+		return null;
+	}
+	
+	// get all data for mainStuff books
+	public Object[][] getBooksData(){
+		
+		ArrayList<Object[]> books = new ArrayList<Object[]>();
+		try{
+			String query = "select k.kname, k.author, i.vzeta, i.za_vrushtane"
+						+ " from knigi k"
+						+ " left join inforeg i"
+						+ " on k.id = i.kniga_fk";
+			Statement statm = con.createStatement();
+			ResultSet result = statm.executeQuery(query);
+			while(result.next()){
+				
+				Object[] book = {result.getObject("kname"), result.getObject("author"), result.getObject("vzeta"), result.getObject("za_vrushtane")};
+				books.add(book);
+			}
+			
+		}catch(Exception ex){
+			System.out.println("Error" + ex);
+		}
+		return books.toArray(new Object[0][0]);
+	}
+	
+	
 	// method for adding new specialnosti to the db
 	public void addSpec(String spec){
 		try{					
