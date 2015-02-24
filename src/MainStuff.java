@@ -62,15 +62,7 @@ public class MainStuff extends JPanel {
 		lblNewLabel_2.setBounds(30, 90, 46, 14);
 		add(lblNewLabel_2);
 		
-		JButton btnNewButton = new JButton("Get Student");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				fakNum = (String) comboBox.getSelectedItem();
-				lblNewLabel_1.setText(con.getPersonByFn(fakNum));
-			}
-		});
-		btnNewButton.setBounds(193, 19, 105, 48);
-		add(btnNewButton);
+		
 		
 		JButton btnNewButton_1 = new JButton("Filter Books");
 		btnNewButton_1.addActionListener(new ActionListener() {
@@ -80,13 +72,7 @@ public class MainStuff extends JPanel {
 		btnNewButton_1.setBounds(193, 87, 105, 20);
 		add(btnNewButton_1);
 		
-		JButton btnNewButton_2 = new JButton("Add book");
-		btnNewButton_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnNewButton_2.setBounds(193, 118, 105, 20);
-		add(btnNewButton_2);
+		
 		
 		
 		
@@ -114,6 +100,42 @@ public class MainStuff extends JPanel {
     		model.addRow(book);
     	}
 		scrollPane.setViewportView(table);
+		
+		JButton btnNewButton = new JButton("Get Student");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fakNum = (String) comboBox.getSelectedItem();
+				lblNewLabel_1.setText(con.getPersonByFn(fakNum));
+				
+				int rowCount = model.getRowCount();
+    			//Remove rows one by one from the end of the table
+    			for (int i = rowCount - 1; i >= 0; i--) {
+    			    model.removeRow(i);   			
+    			}
+    			//Repopulates the table with the updated data
+    			    			for(Object[] person : con.getPersonBooks(fakNum)){
+    	    		model.addRow(person);
+    	    	}
+				
+			}
+		});
+		btnNewButton.setBounds(193, 19, 105, 48);
+		add(btnNewButton);
+		
+		JButton btnNewButton_2 = new JButton("Add book");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				fakNum = (String) comboBox.getSelectedItem();
+				int stuId = con.getPersonIdByFn(fakNum);
+				String bookName = (String) comboBox_1.getSelectedItem();
+				int bookId = con.getBookIdByName(bookName);
+				
+				con.addBookToPerson(stuId, bookId);
+			}
+		});
+		btnNewButton_2.setBounds(193, 118, 105, 20);
+		add(btnNewButton_2);
 
 	}
 

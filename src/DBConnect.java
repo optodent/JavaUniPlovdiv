@@ -3,14 +3,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Calendar;
 
 
 public class DBConnect {
 	
-	private Connection con;
+	public static Connection con;
 	private Statement st;
 	private ResultSet rs;
 	
@@ -25,6 +25,82 @@ public class DBConnect {
 			System.out.println("Error" + exe);
 		}
 	}// end DBConnect
+	
+	public void addBookToPerson(int person_fk, int kniga_fk){
+		
+		
+		try{
+			
+			String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
+			
+			Calendar date = Calendar.getInstance();
+			date.add(Calendar.MONTH, 6);
+			String returnDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date.getTime());
+			
+			String query =  " insert into inforeg (person_fk, kniga_fk, vzeta, za_vrushtane)"
+			        + " values (?, ?, ?, ?)";
+			PreparedStatement pst = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);	
+			pst.setInt(1, person_fk);
+			pst.setInt(2, kniga_fk);
+			pst.setString(3, currentDate);
+			pst.setString(4, returnDate);
+			
+			pst.execute();
+			
+					
+		}catch(Exception ex){
+			System.out.println(ex);
+		}
+	}
+	
+	public int getPersonIdByFn(String fn){
+		try{
+
+			int one = 0;
+			// query to the db to get all the entries
+			String query = "SELECT p.id"
+						+ " from person p"
+						+ " join specialnosti s"
+						+ " on p.spec_fk = s.spec_id"
+						+ " where p.faknum = " + fn;					       
+		    
+			rs = st.executeQuery(query);
+			
+			while (rs.next()){		   		        
+				one = rs.getInt("id");			    		        
+			}
+															
+			return one;	
+			
+		}catch(Exception ex){
+			System.out.println(ex);
+		}
+		return 0;
+		
+	}
+	
+	public int getBookIdByName(String name){
+		try{
+
+			int one = 0;
+			// query to the db to get all the entries
+			String query = "SELECT id"
+						+ " from knigi"				
+						+ " where kname = '" + name + "'";					       
+		    
+			rs = st.executeQuery(query);
+			
+			while (rs.next()){		   		        
+				one = rs.getInt("id");			    		        
+			}
+															
+			return one;	
+			
+		}catch(Exception ex){
+			System.out.println(ex);
+		}
+		return 0;
+	}
 	
 	// method to get all the specialities from the DB in the form of a string array
 	public String[] getAllSpec(){
@@ -84,43 +160,33 @@ public class DBConnect {
 		return null;
 	}
 	// get books taken information for specific student
-	public String getPersonBooks(String fn){
+	public Object[][] getPersonBooks(String fn){
+		
+		ArrayList<Object[]> books = new ArrayList<Object[]>();
 		try{
-
-			String allData = null;
+			String query = "SELECT k.kname, k.author, i.vzeta, i.za_vrushtane"
+					+ " from knigi k"
+					+ " join inforeg i"
+					+ " on k.id = i.kniga_fk"
+					+ " join person p"
+					+ " on p.id = i.person_fk"
+					+ " where p.faknum = " + fn;	
 			
-			// query to the db to get all the entries
-			String query = "SELECT k.kname, i.vzeta, i.za_vrushtane"
-						+ " from knigi k"
-						+ " join inforeg i"
-						+ " on k.id = i.kniga_fk"
-						+ " join person p"
-						+ " on p.id = i.person_fk"
-						+ " where p.faknum = " + fn;	
-								
-										       
-		    
-			rs = st.executeQuery(query);
-			
-			while (rs.next()){		   		        
-				String one = rs.getString("fname");
-			    String two = rs.getString("lname");
-				String three = rs.getString("faknum");
-		        String four = rs.getString("sname");
-		        
-		        allData = "<html>" +one + " " +two+ "<br>" +three+ "<br>" + four + "</html>";		        
-		    }
-			
-			
-									
-			return allData;	
+			Statement statm = con.createStatement();
+			ResultSet result = statm.executeQuery(query);
+			while(result.next()){
+				
+				Object[] book = {result.getObject("kname"), result.getObject("author"), result.getObject("vzeta"), result.getObject("za_vrushtane")};
+				books.add(book);
+			}
 			
 		}catch(Exception ex){
-			System.out.println(ex);
+			System.out.println("Error" + ex);
 		}
-		return null;
+		return books.toArray(new Object[0][0]);
 		
 	}
+	
 	// get specific person information based on FakNum string
 	public String getPersonByFn(String fn){
 		try{
@@ -330,7 +396,7 @@ public class DBConnect {
 		return books.toArray(new Object[0][0]);
 	}
 	
-	// method for table creation (used only in development for easyer work)
+	// method for table creation (used only in development for easier work)
 	public void setTables() {
 		try{
 			String query3 = "CREATE TABLE inforeg" +
