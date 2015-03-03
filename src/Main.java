@@ -1,3 +1,5 @@
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
@@ -25,10 +27,14 @@ public class Main extends JFrame {
 		MainStuff mainstuff = new MainStuff(connect);	
 		
 		JTabbedPane tabs = new JTabbedPane();
-		tabs.addTab("MainStuff", mainstuff);
-		tabs.addTab("Students", students);
-		tabs.addTab("Books", books);
-		tabs.addTab("Specialities", specialities);
+		Icon icon1 = new ImageIcon(this.getClass().getResource("/images/book_stack.png"));
+		Icon icon2 = new ImageIcon(this.getClass().getResource("/images/people.png"));
+		Icon icon3 = new ImageIcon(this.getClass().getResource("/images/folder.png"));
+		Icon icon4 = new ImageIcon(this.getClass().getResource("/images/pencil.png"));
+		tabs.addTab("MainStuff",icon4, mainstuff);
+		tabs.addTab("Students",icon2, students);
+		tabs.addTab("Books",icon1, books);
+		tabs.addTab("Specialities",icon3, specialities);
 		this.add(tabs);
 		//refresh the screen on load
 		this.invalidate(); 

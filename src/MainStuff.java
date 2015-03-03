@@ -48,7 +48,7 @@ public class MainStuff extends JPanel {
 		comboBox_1.setBounds(30, 118, 153, 20);
 		add(comboBox_1);
 		
-		JLabel lblNewLabel_1 = new JLabel("New label");
+		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblNewLabel_1.setBounds(337, 26, 124, 112);
 		add(lblNewLabel_1);
