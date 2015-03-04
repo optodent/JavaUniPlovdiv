@@ -25,9 +25,11 @@ import javax.swing.table.DefaultTableModel;
 public class Books extends JPanel {
 
 	private DBConnect con; // field accessing and modifying database
-	private String[] columnTableNames = { "Book ID", "Book Name", "Author","Quantity" }; //table column names
-	private JScrollPane scrollPane; //scrolling panel for JTable
-	private JLabel booksLabel = new JLabel("Books specification"); //books label
+	private String[] columnTableNames = { "Book ID", "Book Name", "Author",
+			"Quantity" }; // table column names
+	private JScrollPane scrollPane; // scrolling panel for JTable
+	private JLabel booksLabel = new JLabel("Books specification"); // books
+																	// label
 	private JLabel booksTitle = new JLabel("Current books in database!");
 	private JPanel booksOption = new JPanel();
 	private JTextField addBookName = new JTextField(35);
@@ -39,16 +41,13 @@ public class Books extends JPanel {
 	private JButton addBookButton = new JButton("Add book");
 	private JButton refreshBookButton = new JButton("Refresh");
 	private JButton removeBookButton = new JButton("Remove");
-	
-	
+	private JButton editBookButton = new JButton("Edit");
 
 	public Books(DBConnect con) {
 
-
-		Object[][] data = con.getBooks(); // getting books from database 
+		Object[][] data = con.getBooks(); // getting books from database
 		JTable table = new JTable();
-		table.setModel(new DefaultTableModel(
-				data,columnTableNames));
+		table.setModel(new DefaultTableModel(data, columnTableNames));
 		table.setPreferredScrollableViewportSize(new Dimension(450, 80));
 		this.add(booksTitle);
 		this.scrollPane = new JScrollPane(table);
@@ -56,93 +55,129 @@ public class Books extends JPanel {
 		this.add(scrollPane);
 		this.add(booksOption);
 		booksOption.setLayout(new GridBagLayout());
-		this.initializeLayout();	
-		//Style Buttons
+		this.initializeLayout();
+		// Style Buttons
 		Border line = new LineBorder(Color.BLUE);
 		Border margin = new EmptyBorder(5, 15, 5, 15);
 		Border compound = new CompoundBorder(line, margin);
+		editBookButton.setForeground(Color.BLACK);
+		editBookButton.setBorder(compound);
 		addBookButton.setForeground(Color.BLACK);
 		addBookButton.setBorder(compound);
 		refreshBookButton.setForeground(Color.BLACK);
 		refreshBookButton.setBorder(compound);
 		removeBookButton.setForeground(Color.BLACK);
 		removeBookButton.setBorder(compound);
-		//end style
-		addBookButton.addActionListener(new ActionListener(){
-
+		// end style
+		addBookButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String numbers="1234567890-";
+				//String numbers = "1234567890-";
 				String bookName = addBookName.getText();
 				String authorBook = addAuthour.getText();
-				Long result = null;
+				//Long result = null;
 				String quantityBook = addQuantity.getText();
-				if (!numbers.contains(quantityBook) && addQuantity.getText() != null && !"".equals(addQuantity.getText()) && addBookName.getText()!=null && !"".equals(addBookName.getText()) && addAuthour.getText()!=null && !"".equals(addAuthour.getText())) {
-				
+				// if (!numbers.contains(quantityBook) && addQuantity.getText()
+				// != null && !"".equals(addQuantity.getText()) &&
+				// addBookName.getText()!=null &&
+				// !"".equals(addBookName.getText()) &&
+				// addAuthour.getText()!=null &&
+				// !"".equals(addAuthour.getText())) {
+
 				Statement stmt = null;
-				try {			
+				try {
 					Connection tempConnection = DBConnect.con;
 					stmt = tempConnection.createStatement();
-					String query = "INSERT INTO knigi (kname, author, qty)" +
-									"VALUES ('" + bookName+"'" +", " + "'"+authorBook+"', " + quantityBook+")";
+					String query = "INSERT INTO knigi (kname, author, qty)"
+							+ "VALUES ('" + bookName + "'" + ", " + "'"
+							+ authorBook + "', " + quantityBook + ")";
 					stmt.execute(query);
-			
+
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}			
-			}else{ System.out.println("Wrong format!");}
 				}
-			
+				// }else{ System.out.println("Wrong format!");}
+			}
+
 		});
-		refreshBookButton.addActionListener(new ActionListener(){
+		refreshBookButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				DefaultTableModel model= (DefaultTableModel) table.getModel();
+
+				DefaultTableModel model = (DefaultTableModel) table.getModel();
 				int tableRows = model.getRowCount();
-				
+
 				for (int i = tableRows - 1; i >= 0; i--) {
-    			    model.removeRow(i);   			
-    			}
-				
+					model.removeRow(i);
+				}
+
 				Object[][] dataBooks = con.getBooks();
 				for (Object[] book : dataBooks) {
 					model.addRow(book);
 				}
 			}
-			
+
 		});
-		removeBookButton.addActionListener(new ActionListener(){
+		removeBookButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				DefaultTableModel model= (DefaultTableModel) table.getModel();
-				
-				String selected = model.getValueAt(table.getSelectedRow(), 0).toString();
+				DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+				String selected = model.getValueAt(table.getSelectedRow(), 0)
+						.toString();
 				model.removeRow(table.getSelectedRow());
 				Statement stmt = null;
 				try {
 					Connection tempConnection = DBConnect.con;
 					stmt = tempConnection.createStatement();
-					String query = "DELETE FROM knigi WHERE id = "  + selected;					
+					String query = "DELETE FROM knigi WHERE id = " + selected;
 					stmt.execute(query);
-					
-			
+
 				} catch (SQLException s) {
 					// TODO Auto-generated catch block
 					s.printStackTrace();
-				}			
-					
+				}
+
+			}
+
+		});
+		
+		editBookButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				DefaultTableModel model = (DefaultTableModel) table.getModel();
+				int bookID = (int) model.getValueAt(table.getSelectedRow(), 0);
+				String bookName = model.getValueAt(table.getSelectedRow(), 1).toString();
+				String bookAuthor = model.getValueAt(table.getSelectedRow(), 2).toString();
+				String bookQty = model.getValueAt(table.getSelectedRow(), 3).toString();
+				
+				Statement stmt = null;
+				try {
+					Connection tempConnection = DBConnect.con;
+					stmt = tempConnection.createStatement();
+					String query = "UPDATE knigi SET kname='"
+							+ bookName + "', author='" + bookAuthor
+							+ "', qty=" + bookQty + " WHERE ID = " + bookID;
+					stmt.execute(query);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				 
 			}
 			
 		});
 	}
 	
-	private void initializeLayout(){
+
+	private void initializeLayout() {
 		booksOption.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
@@ -172,7 +207,7 @@ public class Books extends JPanel {
 		this.add(addBookButton);
 		this.add(refreshBookButton);
 		this.add(removeBookButton);
+		this.add(editBookButton);
 	}
-	
-		
+
 }

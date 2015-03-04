@@ -17,7 +17,7 @@ public class Specialities extends JPanel{
 public Specialities(DBConnect con){
 		this.con = con;
 		JTextField textField = new JTextField("", 10);				
-		JButton addSpecBtn = new JButton("Add Specialnost");
+		JButton addSpecBtn = new JButton("Add Specialities");
 		//Style Button
 		Border line = new LineBorder(Color.BLUE);
 		Border margin = new EmptyBorder(5, 15, 5, 15);
