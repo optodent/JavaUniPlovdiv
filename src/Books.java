@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,6 +16,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class Books extends JPanel {
@@ -52,15 +57,28 @@ public class Books extends JPanel {
 		this.add(booksOption);
 		booksOption.setLayout(new GridBagLayout());
 		this.initializeLayout();	
+		//Style Buttons
+		Border line = new LineBorder(Color.BLUE);
+		Border margin = new EmptyBorder(5, 15, 5, 15);
+		Border compound = new CompoundBorder(line, margin);
+		addBookButton.setForeground(Color.BLACK);
+		addBookButton.setBorder(compound);
+		refreshBookButton.setForeground(Color.BLACK);
+		refreshBookButton.setBorder(compound);
+		removeBookButton.setForeground(Color.BLACK);
+		removeBookButton.setBorder(compound);
+		//end style
 		addBookButton.addActionListener(new ActionListener(){
 
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
+				String numbers="1234567890-";
 				String bookName = addBookName.getText();
 				String authorBook = addAuthour.getText();
+				Long result = null;
 				String quantityBook = addQuantity.getText();
+				if (!numbers.contains(quantityBook) && addQuantity.getText() != null && !"".equals(addQuantity.getText()) && addBookName.getText()!=null && !"".equals(addBookName.getText()) && addAuthour.getText()!=null && !"".equals(addAuthour.getText())) {
 				
 				Statement stmt = null;
 				try {			
@@ -74,7 +92,8 @@ public class Books extends JPanel {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}			
-			}
+			}else{ System.out.println("Wrong format!");}
+				}
 			
 		});
 		refreshBookButton.addActionListener(new ActionListener(){
@@ -102,15 +121,16 @@ public class Books extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 				DefaultTableModel model= (DefaultTableModel) table.getModel();
+				
 				String selected = model.getValueAt(table.getSelectedRow(), 0).toString();
 				model.removeRow(table.getSelectedRow());
-				
 				Statement stmt = null;
-				try {			
+				try {
 					Connection tempConnection = DBConnect.con;
 					stmt = tempConnection.createStatement();
 					String query = "DELETE FROM knigi WHERE id = "  + selected;					
 					stmt.execute(query);
+					
 			
 				} catch (SQLException s) {
 					// TODO Auto-generated catch block

@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -18,6 +20,7 @@ public class Main extends JFrame {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
+		
 		// db connect object should be created in each class that would use it
 		connect = new DBConnect();
 		
@@ -27,10 +30,13 @@ public class Main extends JFrame {
 		MainStuff mainstuff = new MainStuff(connect);	
 		
 		JTabbedPane tabs = new JTabbedPane();
+		tabs.setBackground(Color.WHITE);//tabs background
+		//Tab icons
 		Icon icon1 = new ImageIcon(this.getClass().getResource("/images/book_stack.png"));
 		Icon icon2 = new ImageIcon(this.getClass().getResource("/images/people.png"));
 		Icon icon3 = new ImageIcon(this.getClass().getResource("/images/folder.png"));
 		Icon icon4 = new ImageIcon(this.getClass().getResource("/images/pencil.png"));
+		//end tab icons
 		tabs.addTab("MainStuff",icon4, mainstuff);
 		tabs.addTab("Students",icon2, students);
 		tabs.addTab("Books",icon1, books);
