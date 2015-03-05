@@ -3,6 +3,7 @@ import java.awt.Color;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 
@@ -10,7 +11,8 @@ import javax.swing.JTabbedPane;
 public class Main extends JFrame {
 	
 	
-	private DBConnect connect;	
+	private DBConnect connect;
+	private String pass;
 	
 	public Main() {
 		
@@ -20,9 +22,10 @@ public class Main extends JFrame {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
+		pass = JOptionPane.showInputDialog(this, "Enter password: ");
 		
 		// db connect object should be created in each class that would use it
-		connect = new DBConnect();
+		connect = new DBConnect(pass);
 		
 		Students students = new Students(connect);
 		Books books = new Books(connect);

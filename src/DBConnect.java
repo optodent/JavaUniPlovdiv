@@ -14,10 +14,10 @@ public class DBConnect {
 	private Statement st;
 	private ResultSet rs;
 	
-	public DBConnect(){
+	public DBConnect(String pass){
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://78.130.208.36/tutorials", "admin4o", "56745674");
+			con = DriverManager.getConnection("jdbc:mysql://78.130.208.36/tutorials", "admin4o", pass);
 			st = con.createStatement();
 			
 			
