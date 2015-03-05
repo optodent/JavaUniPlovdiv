@@ -326,7 +326,7 @@ public class DBConnect {
 			ResultSet rsPeople = stPeople.executeQuery(queryPeople);			
 												
 			while(rsPeople.next()){
-				
+				int ID = (int) rsPeople.getObject("ID");
 				String fullName = (String) rsPeople.getObject("fname") + " " + rsPeople.getObject("lname");
 				int spec = (Integer) rsPeople.getObject("spec_fk");
 				String specStr = Integer.toString(spec);
@@ -340,7 +340,7 @@ public class DBConnect {
 					specName = (String) rsSpec.getObject("sname");
 				}
 				
-				Object[] person = {fullName , rsPeople.getObject("faknum"),						  
+				Object[] person = {ID, fullName , rsPeople.getObject("faknum"),						  
 							specName,
 						   "", ""};
 				

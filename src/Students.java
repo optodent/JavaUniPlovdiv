@@ -5,11 +5,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -59,23 +63,7 @@ public class Students extends JPanel{
 		fName.setBounds(66, 36, 100, 20);
 		fName.setColumns(10);
 		fName.setVisible(true);
-		
-		//focus listener to store the string value added in the text field
-		//when focus is changed away from this field
-		fName.addFocusListener(new FocusListener() {
-		      public void focusGained(FocusEvent e) {
-		    	 
-		      };
-		      public void focusLost(FocusEvent e) {
-		        if (!e.isTemporary()) {
-		        	fNameT = fName.getText();
-		        if (fNameT.equals("") ) {
-		        	
-		            System.out.println("Populni Ime!");		            
-		          }
-		        }
-		      }
-		    });
+				
 
 		this.add(fName );
 		
@@ -84,23 +72,7 @@ public class Students extends JPanel{
 		lName.setBounds(66, 67, 100, 20);
 		lName.setColumns(10);
 		lName.setVisible(true);	
-		
-		// focus listener to store the string value added in the text field
-		// when focus is changed away from this field
-		lName.addFocusListener(new FocusListener() {
-			public void focusGained(FocusEvent e) {
-			};
-
-			public void focusLost(FocusEvent e) {
-				if (!e.isTemporary()) {
-					lNameT = lName.getText();
-					if (lNameT.equals("")) {
-
-						System.out.println("Populni Ime!");
-					}
-				}
-			}
-		});
+				
 		
 		this.add(lName );
 		
@@ -110,45 +82,99 @@ public class Students extends JPanel{
 		fakNum.setColumns(10);
 		fakNum.setVisible(true);		
 		
-		// focus listener to store the string value added in the text field
-		// when focus is changed away from this field
-		fakNum.addFocusListener(new FocusListener() {
-			public void focusGained(FocusEvent e) {
-			};
-
-			public void focusLost(FocusEvent e) {
-				if (!e.isTemporary()) {
-					fakNumT = fakNum.getText();
-					if (fakNumT.equals("")) {
-
-						System.out.println("Populni Ime!");
-					}
-				}
-			}
-		});
+		
 		this.add(fakNum );
 		
 		//add student button
-		addPplBtn = new JButton("Add Student");
-		addPplBtn.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		addPplBtn = new JButton("Add Student");	
 		addPplBtn.setBounds(176, 98, 89, 52);
 		addPplBtn.addActionListener(new ActionListener()
 	    {
 	      public void actionPerformed(ActionEvent e)
 	      {		
-	    	      	  
-	    	  spec = dropDown.getSelectedIndex() + 1;
-	    	  con.addPerson(fNameT, lNameT, fakNumT, spec);
-	    	  fName.setText("");
-	    	  lName.setText("");
-	    	  fakNum.setText("");
+	    	  fNameT = fName.getText();
+	    	  lNameT = lName.getText();
+	    	  fakNumT = fakNum.getText();
+	    	  if (fNameT.equals("") || lNameT.equals("") || fakNumT.equals("") ) {
+	    		  JOptionPane.showMessageDialog(null, "Unfilled information!", "Error",
+                          JOptionPane.ERROR_MESSAGE);
+
+	          }  else {  	  
+			    	  spec = dropDown.getSelectedIndex() + 1;
+			    	  con.addPerson(fNameT, lNameT, fakNumT, spec);
+			    	  fName.setText("");
+			    	  lName.setText("");
+			    	  fakNum.setText("");
+	          }
 	      }	   
 	    });
 		
 		this.add(addPplBtn);
 		
+		// edit student selection button
+		JButton editButton = new JButton("Update");
+		editButton.setBounds(274, 98, 89, 52);
+		editButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				DefaultTableModel model = (DefaultTableModel) table.getModel();
+				int ID = (int) model.getValueAt(table.getSelectedRow(), 0);
+				String[] stuNames = model.getValueAt(table.getSelectedRow(), 1).toString().split("\\s+");
+				String fName = stuNames[0];
+				String lName = stuNames[1];
+				String stuFakNum = model.getValueAt(table.getSelectedRow(), 2).toString();
+				
+				Statement stmt = null;
+				try {
+					Connection tempConnection = DBConnect.con;
+					stmt = tempConnection.createStatement();
+					String query = "UPDATE person SET fname='"
+							+ fName + "', lname='" + lName
+							+ "', faknum='" + stuFakNum 
+							+ "' WHERE ID = " + ID;
+					System.out.println(query);
+					stmt.execute(query);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				 
+			}
+			
+		});
+		this.add(editButton);
 		
-		
+		// delete student button
+		JButton deleteButton = new JButton("Delete");
+		deleteButton.setBounds(374, 98, 89, 52);
+		deleteButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+				String selected = model.getValueAt(table.getSelectedRow(), 0)
+						.toString();
+				model.removeRow(table.getSelectedRow());
+				
+				Statement stmt = null;
+				try {
+					Connection tempConnection = DBConnect.con;
+					stmt = tempConnection.createStatement();
+					String query = "DELETE FROM person WHERE id = " + selected;
+					stmt.execute(query);
+
+				} catch (SQLException s) {
+					// TODO Auto-generated catch block
+					s.printStackTrace();
+				}
+			}
+			
+		});
+		this.add(deleteButton);
 		
 		//text at top left
 		JLabel lblNewLabel = new JLabel("Students");
@@ -190,7 +216,7 @@ public class Students extends JPanel{
 				
 			},
 			new String[] {
-				"Student", "Fak. Number", "Speciality", "Drp down menu of books taken", "Taken date", "Return date"
+				"ID", "Student", "Fak. Number", "Speciality"
 			}
 		));
 		// stff
@@ -269,20 +295,14 @@ public class Students extends JPanel{
 		        	 clicked = true; 
 		         }  
 		         
-				
-				
-
-
-				
-								
+																				
 			}
 		});
 
 		this.add(showHideBtn);
 		
 		
-		
-		
+								
 		
 	}
 	
