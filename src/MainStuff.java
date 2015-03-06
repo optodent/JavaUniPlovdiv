@@ -18,7 +18,7 @@ public class MainStuff extends JPanel {
 	DBConnect con;
 	private JTextField textField;
 	private JTextField textField_1;
-	private String fakNum;
+	private String studentName, studentFn;
 
 	/**
 	 * Create the panel.
@@ -26,6 +26,8 @@ public class MainStuff extends JPanel {
 	public MainStuff(DBConnect con) {
 		
 		this.con = con;
+		
+		
 		
 		setLayout(null);
 		
@@ -40,18 +42,18 @@ public class MainStuff extends JPanel {
 		
 		
 		
-		JComboBox comboBox = new JComboBox(con.getAllFakNums());
-		comboBox.setBounds(30, 47, 153, 20);
-		add(comboBox);
+		JComboBox studentNames = new JComboBox(con.getAllStudentNames());
+		studentNames.setBounds(30, 47, 153, 20);
+		add(studentNames);
 		
-		JComboBox comboBox_1 = new JComboBox(con.getAllBookNames());
-		comboBox_1.setBounds(30, 118, 153, 20);
-		add(comboBox_1);
+		JComboBox bookNames = new JComboBox(con.getAllBookNames());
+		bookNames.setBounds(30, 118, 153, 20);
+		add(bookNames);
 		
-		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblNewLabel_1.setBounds(337, 26, 124, 112);
-		add(lblNewLabel_1);
+		JLabel studentInfoLabel = new JLabel("");
+		studentInfoLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		studentInfoLabel.setBounds(337, 26, 124, 112);
+		add(studentInfoLabel);
 		
 		textField_1 = new JTextField();
 		textField_1.setBounds(97, 87, 86, 20);
@@ -64,13 +66,13 @@ public class MainStuff extends JPanel {
 		
 		
 		
-		JButton btnNewButton_1 = new JButton("Filter Books");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JButton filterBooksBtn = new JButton("Filter Books");
+		filterBooksBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnNewButton_1.setBounds(193, 87, 105, 20);
-		add(btnNewButton_1);
+		filterBooksBtn.setBounds(193, 87, 105, 20);
+		add(filterBooksBtn);
 		
 		
 		
@@ -101,11 +103,11 @@ public class MainStuff extends JPanel {
     	}*/
 		scrollPane.setViewportView(table);
 		
-		JButton btnNewButton = new JButton("Get Student");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton getStudentBtn = new JButton("Get Student");
+		getStudentBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				fakNum = (String) comboBox.getSelectedItem();
-				lblNewLabel_1.setText(con.getPersonByFn(fakNum));
+				studentName = (String) studentNames.getSelectedItem();
+				studentInfoLabel.setText(con.getPersonByName(studentName));
 				
 				int rowCount = model.getRowCount();
     			//Remove rows one by one from the end of the table
@@ -113,29 +115,33 @@ public class MainStuff extends JPanel {
     			    model.removeRow(i);   			
     			}
     			//Repopulates the table with the updated data
-    			    			for(Object[] person : con.getPersonBooks(fakNum)){
+    			    			for(Object[] person : con.getPersonBooks(studentName)){
     	    		model.addRow(person);
     	    	}
 				
 			}
 		});
-		btnNewButton.setBounds(193, 19, 105, 48);
-		add(btnNewButton);
+		getStudentBtn.setBounds(193, 47, 105, 20);
+		add(getStudentBtn);
 		
-		JButton btnNewButton_2 = new JButton("Add book");
-		btnNewButton_2.addActionListener(new ActionListener() {
+		JButton addBookBtn = new JButton("Add book");
+		addBookBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				fakNum = (String) comboBox.getSelectedItem();
-				int stuId = con.getPersonIdByFn(fakNum);
-				String bookName = (String) comboBox_1.getSelectedItem();
+				//studentFn = (String) studentNames.getSelectedItem();
+				//int stuId = con.getPersonIdByFn(fakNum);
+				String bookName = (String) bookNames.getSelectedItem();
 				int bookId = con.getBookIdByName(bookName);
 				
-				con.addBookToPerson(stuId, bookId);
+				//con.addBookToPerson(stuId, bookId);
 			}
 		});
-		btnNewButton_2.setBounds(193, 118, 105, 20);
-		add(btnNewButton_2);
+		addBookBtn.setBounds(193, 118, 105, 20);
+		add(addBookBtn);
+		
+		JButton filterStudentsBtn = new JButton("Filter Students");
+		filterStudentsBtn.setBounds(193, 15, 105, 23);
+		add(filterStudentsBtn);
 
 	}
 
