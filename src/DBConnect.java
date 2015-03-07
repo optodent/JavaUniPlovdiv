@@ -130,13 +130,24 @@ public class DBConnect {
 		}
 		return null;
 	}
-	
-	
-	
-	
-	
-	
-	
+	public Object[][] getAllSpecPesho(){
+		ArrayList<Object[]> specList = new ArrayList<Object[]>();
+		try{
+			String query = "select * from specialnosti";
+			Statement statm = con.createStatement();
+			ResultSet result = statm.executeQuery(query);
+			while(result.next()){
+				
+				Object[] spec = {result.getObject("spec_id"), result.getObject("sname")};
+				specList.add(spec);
+			}
+			
+		}catch(Exception ex){
+			System.out.println("Error" + ex);
+		}
+		return specList.toArray(new Object[0][0]);
+	}
+
 	// get all book names
 	public String[] getAllBookNames(){
 		try{
@@ -482,7 +493,8 @@ public class DBConnect {
 	                   " faknum VARCHAR(10) NOT NULL, " +	                                                    
 	                   " PRIMARY KEY ( id ))";
 			
-			String query = "CREATE TABLE specialnosti" +	                 
+			String query = "CREATE TABLE specialnosti" +
+					"(id INTEGER not NULL AUTO_INCREMENT, " +
 	                   " (sname VARCHAR(20) NOT NULL, " + 
 	                   " spec_fk INT, " +
 	                   " FOREIGN KEY ( spec_fk ) REFERENCES person(id))";
