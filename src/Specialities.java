@@ -116,6 +116,31 @@ public Specialities(DBConnect con){
 			}
 
 		});
+		removeSpecButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+				String selected = model.getValueAt(table.getSelectedRow(), 0)
+						.toString();
+				model.removeRow(table.getSelectedRow());
+				Statement stmt = null;
+				try {
+					Connection tempConnection = DBConnect.con;
+					stmt = tempConnection.createStatement();
+					String query = "DELETE FROM specialnosti WHERE spec_id = " + selected;
+					stmt.execute(query);
+
+				} catch (SQLException s) {
+					// TODO Auto-generated catch block
+					s.printStackTrace();
+				}
+
+			}
+
+		});
 		// end of specialnosti tab elements
 	}
 	private void initializeLayout() {
