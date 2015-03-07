@@ -33,7 +33,7 @@ public class Specialities extends JPanel{
 	private JButton addSpecButton = new JButton("Add spec");
 	private JButton refreshSpecButton = new JButton("Refresh");
 	private JButton removeSpecButton = new JButton("Remove");
-	private JButton editSpecButton = new JButton("Edit");
+	private JButton editSpecButton = new JButton("Update");
 public Specialities(DBConnect con){
 		this.con = con;
 		Object[][] data = con.getBooks(); // getting books from database
@@ -141,6 +141,30 @@ public Specialities(DBConnect con){
 			}
 
 		});
+		editSpecButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				DefaultTableModel model = (DefaultTableModel) table.getModel();
+				int specID = (int) model.getValueAt(table.getSelectedRow(), 0);
+				String specName = model.getValueAt(table.getSelectedRow(), 1).toString();
+				
+				Statement stmt = null;
+				try {
+					Connection tempConnection = DBConnect.con;
+					stmt = tempConnection.createStatement();
+					String query = "UPDATE specialnosti SET sname='" + specName
+							+ "'" + " WHERE spec_id = " + specID;
+					stmt.execute(query);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				 
+			}
+			
+		});
 		// end of specialnosti tab elements
 	}
 	private void initializeLayout() {
@@ -151,8 +175,8 @@ public Specialities(DBConnect con){
 		c.gridwidth = 2;
 		c.gridwidth = 1;
 		specOption.add(addSpecLabel, c);
-		c.gridx = 1;
-		c.gridy = 1;
+		c.gridx = 0;
+		c.gridy = 2;
 		specOption.add(addSpecName, c);
 		c.gridx = 0;
 		c.gridy = 2;
